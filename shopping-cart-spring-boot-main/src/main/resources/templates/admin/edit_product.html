@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+	<meta charset="ISO-8859-1">
+    <title>Edit Product</title>
+</head>
+<body>
+<section>
+    <div class="container mt-4 p-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-dark text-white text-center">
+                        <h5>Edit Product</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Flash Messages -->
+                        <th:block th:if="${session.succMsg}">
+                            <div class="alert alert-success" th:text="${session.succMsg}"></div>
+                            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+                        <th:block th:if="${session.errorMsg}">
+                            <div class="alert alert-danger" th:text="${session.errorMsg}"></div>
+                            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+
+                        <!-- Edit Form -->
+                        <form th:action="@{/admin/updateProduct}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="id" th:value="${product.id}"/>
+
+                            <div class="mb-3">
+                                <label class="form-label">Title</label>
+                                <input type="text" name="title" th:value="${product.title}" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" name="description" rows="3" required>[[${product.description}]]</textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select name="category" class="form-select" required>
+                                        <option selected disabled>Select category</option>
+                                        <option th:value="${product.category}" th:text="${product.category}" selected></option>
+                                        <option th:each="c : ${categories}" th:value="${c.name}" th:text="${c.name}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Price</label>
+                                    <input type="number" name="price" th:value="${product.price}" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Discount (%)</label>
+                                    <input type="number" name="discount" th:value="${product.discount}" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Discount Price</label>
+                                    <input type="number" th:value="${product.discountPrice}" readonly class="form-control bg-light">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="isActive" value="true"
+                                           th:checked="${product.isActive == true}">
+                                    <label class="form-check-label">Active</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="isActive" value="false"
+                                           th:checked="${product.isActive == false}">
+                                    <label class="form-check-label">Inactive</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Stock</label>
+                                    <input type="number" name="stock" th:value="${product.stock}" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Upload New Image</label>
+                                    <input type="file" name="file" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Current Image</label><br>
+                                <img th:src="@{'/img/product_img/' + ${product.image}}" width="120" height="120"
+                                     class="border rounded shadow-sm">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Update Product</button>
+							<a href="/admin/products" class="btn btn-outline-secondary w-100">
+							    <i class="fa-solid fa-arrow-left me-1"></i> Back
+							</a>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

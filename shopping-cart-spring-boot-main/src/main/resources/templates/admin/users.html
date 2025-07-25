@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${userType == 1 ? 'Users' : 'Admins'} + ' | Qu! Kmart Admin'">Qu! Kmart</title>
+    <style>
+        .profile-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<section>
+    <div class="container-fluid mt-4 p-4">
+
+        <!-- Top Header with Back and Add Admin Button -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="/admin/" class="btn btn-outline-dark">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back
+            </a>
+
+            <h4 class="text-center flex-grow-1" th:text="${userType == 1 ? 'User List' : 'Admin List'}"></h4>
+
+            <a th:if="${userType == 2}" href="/admin/add-admin" class="btn btn-success">
+                <i class="fa-solid fa-user-plus me-1"></i> Add Admin
+            </a>
+        </div>
+
+        <!-- Flash Messages -->
+        <div th:if="${session.succMsg}" class="alert alert-success alert-dismissible fade show" role="alert">
+            [[${session.succMsg}]]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+        </div>
+
+        <div th:if="${session.errorMsg}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            [[${session.errorMsg}]]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+        </div>
+
+        <!-- User/Admin Table -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-center align-middle">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Profile</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Mobile No</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="u, c : ${users}">
+                            <td>[[${c.count}]]</td>
+                            <td>
+                                <img th:src="@{'/img/profile_img/' + ${u.profileImage}}" class="profile-img" alt="Profile">
+                            </td>
+                            <td>[[${u.name}]]</td>
+                            <td>[[${u.email}]]</td>
+                            <td>[[${u.mobileNumber}]]</td>
+                            <td>
+                                [[${u.address}]], [[${u.city}]], [[${u.state}]] - [[${u.pincode}]]
+                            </td>
+                            <td>
+                                <span th:text="${u.isEnable ? 'Active' : 'Inactive'}"
+                                      th:classappend="${u.isEnable ? 'badge bg-success' : 'badge bg-secondary'}"></span>
+                            </td>
+                            <td>
+                                <a th:href="@{'/admin/updateSts?status=true&id=' + ${u.id} + '&type=' + ${userType}}"
+                                   class="btn btn-sm btn-outline-primary mb-1">Activate</a>
+                                <a th:href="@{'/admin/updateSts?status=false&id=' + ${u.id} + '&type=' + ${userType}}"
+                                   class="btn btn-sm btn-outline-danger">Deactivate</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${#lists.isEmpty(users)}" class="text-muted text-center py-4">
+                    No [[${userType == 1 ? 'Users' : 'Admins'}]] found.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

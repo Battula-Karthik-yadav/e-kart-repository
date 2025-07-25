@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Qu! Kmart</title>
+</head>
+<body>
+<section>
+
+    <!-- 🔍 Search Bar -->
+    <div class="container-fluid bg-primary py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form action="/products" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control rounded-start" name="ch" placeholder="Search for products...">
+                        <button class="btn btn-light text-dark rounded-end px-4">
+                            <i class="fa-solid fa-magnifying-glass"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🛒 Product & Category Layout -->
+    <div class="container-fluid mt-3">
+        <div class="row">
+
+            <!-- 📂 Sidebar Categories -->
+            <div class="col-md-2">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="fs-5 fw-semibold">Category</p>
+                        <div class="list-group">
+                            <a href="/products"
+                               class="list-group-item list-group-item-action"
+                               th:classappend="${paramValue == ''} ? 'active' : ''">All</a>
+                            <a th:each="c : ${categories}"
+                               th:href="@{'/products?category=' + ${c.name}}"
+                               class="list-group-item list-group-item-action"
+                               th:classappend="${paramValue == c.name} ? 'active' : ''">[[${c.name}]]</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📦 Product Grid -->
+            <div class="col-md-10">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="text-center mb-4">Products</h3>
+                        <div class="row">
+
+                            <!-- ✅ Product Available -->
+                            <th:block th:if="${productsSize > 0}">
+                                <div class="col-md-3 mb-4" th:each="p : ${products}">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-body text-center">
+                                            <img th:src="@{'/img/product_img/' + ${p.image}}" class="img-fluid mb-3" width="140" height="140" alt="Product">
+                                            <p class="fs-6 fw-semibold">[[${p.title}]]</p>
+                                            <div>
+                                                <span class="fw-bold text-dark" th:utext="${@commnServiceImpl.rupeeSign()}"></span> [[${p.discountPrice}]] <br>
+                                                <small class="text-muted text-decoration-line-through">
+                                                    <th:block th:utext="${@commnServiceImpl.rupeeSign()}"></th:block> [[${p.price}]]
+                                                </small>
+                                                <span class="text-success ms-1">[[${p.discount}]]% off</span>
+                                            </div>
+                                            <a th:href="@{'/product/' + ${p.id}}" class="btn btn-outline-primary btn-sm mt-3">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+
+                            <!-- ❌ Product Not Found -->
+                            <th:block th:unless="${productsSize > 0}">
+                                <p class="fs-4 text-center mt-4 text-danger">No products found</p>
+                            </th:block>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🔢 Pagination -->
+                <div class="row mt-3 align-items-center">
+                    <div class="col-md-4">
+                        <span>Total Products: <strong>[[${totalElements}]]</strong></span>
+                    </div>
+                    <div class="col-md-8 text-end">
+                        <th:block th:if="${productsSize > 0}">
+                            <nav>
+                                <ul class="pagination justify-content-end">
+                                    <li class="page-item" th:classappend="${isFirst} ? 'disabled' : ''">
+                                        <a class="page-link" th:href="@{'/products?pageNo=' + ${pageNo - 1}}">&laquo;</a>
+                                    </li>
+
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                                        th:classappend="${pageNo + 1 == i} ? 'active' : ''">
+                                        <a class="page-link" th:href="@{'/products?pageNo=' + ${i - 1}}">[[${i}]]</a>
+                                    </li>
+
+                                    <li class="page-item" th:classappend="${isLast} ? 'disabled' : ''">
+                                        <a class="page-link" th:href="@{'/products?pageNo=' + ${pageNo + 1}}">&raquo;</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </th:block>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Add Admin</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<style>
+		body {
+			background-color: #f4f6f8;
+			font-family: 'Segoe UI', sans-serif;
+		}
+		.card-industrial {
+			background-color: #ffffff;
+			border: 1px solid #ced4da;
+			border-left: 5px solid #343a40;
+			box-shadow: 0 0 15px rgba(0,0,0,0.1);
+			border-radius: 10px;
+		}
+		.btn-industrial {
+			background-color: #343a40;
+			color: #fff;
+			border: none;
+		}
+		.btn-industrial:hover {
+			background-color: #495057;
+		}
+		label {
+			font-weight: 600;
+		}
+	</style>
+</head>
+<body>
+	<section>
+		<div class="container mt-5 p-4">
+			<div class="row justify-content-center">
+				<div class="col-md-9">
+					<div class="card card-industrial p-4">
+						<div class="card-header text-center bg-white border-0">
+							<h4 class="fw-bold"><i class="fa-solid fa-user-gear me-2"></i>Add Admin</h4>
+							
+							<!-- Success & Error Messages -->
+							<th:block th:if="${session.succMsg}">
+								<p class="text-success fw-bold">[[${session.succMsg}]]</p>
+								<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+							</th:block>
+
+							<th:block th:if="${session.errorMsg}">
+								<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+								<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+							</th:block>
+						</div>
+
+						<div class="card-body">
+							<form action="/admin/save-admin" enctype="multipart/form-data" method="post">
+								<div class="row mb-3">
+									<div class="col">
+										<label>Full Name</label>
+										<input required class="form-control" name="name" type="text" placeholder="e.g. John Doe">
+									</div>
+									<div class="col">
+										<label>Mobile Number</label>
+										<input required class="form-control" name="mobileNumber" type="number" placeholder="e.g. 9876543210">
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label>Email</label>
+									<input required class="form-control" name="email" type="email" placeholder="e.g. john@example.com">
+								</div>
+
+								<div class="row mb-3">
+									<div class="col">
+										<label>Address</label>
+										<input required class="form-control" name="address" type="text">
+									</div>
+									<div class="col">
+										<label>City</label>
+										<input required class="form-control" name="city" type="text">
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col">
+										<label>State</label>
+										<input required class="form-control" name="state" type="text">
+									</div>
+									<div class="col">
+										<label>Pincode</label>
+										<input required class="form-control" name="pincode" type="number">
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col">
+										<label>Password</label>
+										<input required class="form-control" name="password" type="password">
+									</div>
+									<div class="col">
+										<label>Confirm Password</label>
+										<input required class="form-control" name="cpassword" type="password">
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label>Profile Image</label>
+									<input class="form-control" name="img" type="file">
+								</div>
+
+								<div class="d-grid gap-2">
+									<button type="submit" class="btn btn-industrial">Register Admin</button>
+									<a href="/admin/" class="btn btn-outline-dark">
+										<i class="fa-solid fa-arrow-left me-2"></i> Back
+									</a>
+								</div>
+							</form>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
